@@ -26,6 +26,7 @@
   ],
   "dependencies": {
     "flat-cache": "^4.0.0",
+    "ora": "^8.0.1",
     "warframe-items": "^1.1262.7",
     "warframe-worldstate-data": "^2.3.5"
   },
