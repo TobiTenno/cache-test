@@ -1,0 +1,33 @@
+{
+  "name": "cache-test",
+  "version": "0.0.0-dev",
+  "description": "testing flat-cache",
+  "main": "index.js",
+  "scripts": {
+    "test": "exit 0",
+    "lint": "jshint .",
+    "validate": "npm ls",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TobiTenno/cache-test.git"
+  },
+  "author": "TobiTenno",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TobiTenno/cache-test/issues"
+  },
+  "homepage": "https://github.com/TobiTenno/cache-test#readme",
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test"
+  ],
+  "dependencies": {
+    "flat-cache": "^4.0.0",
+    "warframe-items": "^1.1262.7",
+    "warframe-worldstate-data": "^2.3.5"
+  },
+  "type": "module"
+}
