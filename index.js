@@ -11,6 +11,7 @@ const caches = ['weapons', 'warframes', 'items', 'mods'];
 let spinner = ora('Caching items').start();
 
 const cache = flatCache.load('.items', resolve(dirName));
+cache.keyv = undefined;
 
 process.on('unhandledRejection', (reason, p) => {
   spinner = spinner.fail(`Unhandled Rejection at: Promise ${p} reason: ${reason}`);
@@ -20,7 +21,8 @@ process.on("uncaughtException", (err) => {
 });
 
 const makeLanguageCache = (language) => {
-  spinner = spinner.start(`Constructing cache for ${language}`);
+  spinner.text = `Constructing cache for ${language}`;
+  spinner = spinner.render();
   const base = {
     weapons: new Items({
       category: ['Primary', 'Secondary', 'Melee', 'Arch-Melee', 'Arch-Gun'],
@@ -44,8 +46,10 @@ const makeLanguageCache = (language) => {
   };
   const merged = {};
   caches.forEach((cacheType) => {
+    spinner = spinner.render();
     const subCache = base[cacheType];
     merged[cacheType] = [...subCache].map((item) => {
+      spinner = spinner.render();
       let itemClone = { ...item };
       if (language !== 'en' && itemClone.i18n && itemClone.i18n[language]) {
         itemClone = {
@@ -71,6 +75,7 @@ const makeLanguageCache = (language) => {
 data.locales.forEach((language) => {
   const cacheForLang = makeLanguageCache(language);
   caches.forEach((cacheType) => {
+    spinner = spinner.render();
     try {
       cache.setKey(`${language}-${cacheType}`, cacheForLang[cacheType]);
     } catch (e) {
@@ -79,15 +84,16 @@ data.locales.forEach((language) => {
   });
 });
 try {
-  spinner = spinner.start('Setting last_updt');
+  spinner.text = 'Setting last_updt';
   cache.setKey('last_updt', Date.now());
 } catch (e) {
   console.error('failed to set last_updt', e);
 }
 try {
-  spinner = spinner.start('Saving cache');
+  spinner.text = 'Saving cache';
   cache.save(true);
 } catch (e) {
-  console.error('failed to save cache', e);
+  spinner.text = 'Failed to save cache';
+  spinner.color = 'red';
 }
 spinner = spinner.succeed('Saved');
